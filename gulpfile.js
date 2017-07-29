@@ -5,9 +5,7 @@ var autoprefixer = require("gulp-autoprefixer");
 var browserSync  = require("browser-sync").create();
 var sass         = require("gulp-sass");
 var nodemon      = require("gulp-nodemon");
-var browserify   = require("gulp-browserify");
-var rename       = require("gulp-rename");
-
+var concat       = require("gulp-concat");
 
 var config = {
     source  :'./src/',
@@ -15,21 +13,21 @@ var config = {
 };
 
 var paths = {
-    assets  :"assets/",
-    html    :"**/*.html",
-    js      :"js/**/*.js",
-    sass    :"scss/**/*.scss",
-    mainSass:"scss/main.scss",
-    mainJS  :"js/app.js"
+    assets   :"assets/",
+    html     :"**/*.html",
+    js       :"js/**/*.js",
+    sass     :"scss/**/*.scss",
+    mainSass :"scss/main.scss",
+    mainJS   :"js/index.js",
 };
 
 var sources = {
-    assets  :config.source + paths.assets,
-    html    :config.source + paths.html,
-    js      :config.source + paths.js,
-    sass    :config.source + paths.sass,
-    rootSass:config.source + paths.assets + paths.mainSass,
-    rootJs  :config.source + paths.assets + paths.mainJS
+    assets      :config.source + paths.assets,
+    html        :config.source + paths.html,
+    js          :config.source + paths.js,
+    sass        :config.source + paths.sass,
+    rootSass    :config.source + paths.assets + paths.mainSass,
+    rootJs      :config.source + paths.assets + paths.js,
 };
 
 gulp.task("html",()=>{
@@ -44,6 +42,10 @@ gulp.task("watch-html",["html"],(done)=>{
 
 gulp.task("sass",()=>{
     gulp.src(sources.rootSass)
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
         .pipe(sass({
             outputStyle: "compressed"
             }).on("error",sass.logError))
@@ -57,8 +59,7 @@ gulp.task("watch-sass",["sass"],(done)=>{
 
 gulp.task("js",()=>{
    gulp.src(sources.rootJs)
-       .pipe(browserify())
-       .pipe(rename("bundle.js"))
+       .pipe(concat("bundle.js"))
        .pipe(gulp.dest(config.dist + paths.assets + "js"));
 });
 
@@ -85,12 +86,9 @@ gulp.task('browser-sync', ['nodemon'],function () {
             ws: true
         }
     });
-
 });
-gulp.task("default",["browser-sync"],()=>{
-
     gulp.watch(sources.html,["watch-html"]);
     gulp.watch(sources.js,["watch-js"]);
     gulp.watch(sources.sass,["watch-sass"]);
 
-});
+gulp.task("default",["html","js","sass","browser-sync"]);
