@@ -9,23 +9,30 @@ const Portada=(root)=>{
     return div;
 }
 
-const position=()=>{
-let latitude, longitude;
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
+/*
+const Position=()=>{
+    function initMap()
+    {
+        let latitude, longitude;
+        function getLocation() {
+            if (navigator.geolocation) {
+                console.log(navigator.geolocation);
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("La Geolocalización no es soportada por este navegador.");
+            }
         }
-    }
-    function showPosition(position) {
-        latitude  = position.coords.latitude;
-        longitude = position.coords.longitude;
-    }
-    $(_=>{
-        console.log(latitude);
-        $.get("http://api.darksky.net/forecast/b827519c64115648b838cb739b674f3a/"+latitude+','+longitude,(json)=> {
-            state.clima=json;
+        function showPosition(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+        }
+
+        $(_ => {
+
+            $.get("http://api.darksky.net/forecast/b827519c64115648b838cb739b674f3a/" + latitude + ',' + longitude, (json) => {
+                state.clima = json;
+                console.log(state.clima);
+            })
         })
-    })
-}
+    }
+}*/
